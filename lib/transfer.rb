@@ -14,6 +14,7 @@ class Transfer
     @receiver = receiver
     @status = status = 'pending'
     @amount = amount 
+    @i = i = 0
   end
 
   def valid?
@@ -22,18 +23,25 @@ class Transfer
    #binding.pry
 
   def execute_transaction
-    @sender.balance -= @amount
-    @receiver.balance += @amount
-    @status = 'complete'
+    if sender.balance > @amount && valid?
+      @i +=1
+        if @i == 1
+        @sender.balance -= @amount
+        @receiver.balance += @amount
+        @status = 'complete'
+        end
+    else
+      @status = "rejected"
+      "Transaction rejected. Please check your account balance."
+    end
+  end
+
+  def reverse_transfer
+    if @status == 'complete'
+      @sender.balance += @amount
+      @receiver.balance -= @amount
+      @status = 'reversed'
+    end
   end
  
 end
-
- 
-#test.transfer_money
-#binding.pry
-# puts bezos.display_balance
-# test_transfer.execute_transfer
-# puts bezos.balance
-# puts bezos.close_account
-
