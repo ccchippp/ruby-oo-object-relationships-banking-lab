@@ -14,6 +14,7 @@ class Transfer
     @receiver = receiver
     @status = status = 'pending'
     @amount = amount 
+    @i = i = 0
   end
 
   def valid?
@@ -22,13 +23,33 @@ class Transfer
    #binding.pry
 
   def execute_transaction
-    @sender.balance -= @amount
-    @receiver.balance += @amount
-    @status = 'complete'
+    if sender.balance > @amount && valid?
+      @i +=1
+        if @i == 1
+        @sender.balance -= @amount
+        @receiver.balance += @amount
+        @status = 'complete'
+        end
+    else
+      @status = "rejected"
+      "Transaction rejected. Please check your account balance."
+    end
+  end
+
+  def reverse_transfer
+    if @status == 'complete'
+      @sender.balance += @amount
+      @receiver.balance -= @amount
+      @status = 'reversed'
+    end
   end
  
 end
-
+# numbers = [1,2,4,9,12]
+# numbers.each do |n|
+#   break if n > 10
+#   puts n
+# end
  
 #test.transfer_money
 #binding.pry
